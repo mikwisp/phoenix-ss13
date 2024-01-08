@@ -149,3 +149,64 @@
 			. += "[icon_state]_fail_1"
 		if(151 to INFINITY)
 			. += "[icon_state]_fail_2"
+
+/obj/item/gun/energy/e_gun/nuclear //NOVA EDIT - ICON OVERRIDDEN IN AESTHETICS MODULE
+	name = "advanced energy gun"
+	desc = "An energy gun with an experimental miniaturized nuclear reactor that automatically charges the internal power cell."
+	icon_state = "nucgun"
+	inhand_icon_state = "nucgun"
+	charge_delay = 10
+	can_charge = FALSE
+	ammo_x_offset = 1
+	ammo_type = list(/obj/item/ammo_casing/energy/laser, /obj/item/ammo_casing/energy/disabler)
+	selfcharge = 1
+	var/reactor_overloaded
+	var/fail_tick = 0
+	var/fail_chance = 0
+
+/obj/item/gun/energy/e_gun/nuclear/process(seconds_per_tick)
+	if(fail_tick > 0)
+		fail_tick -= seconds_per_tick * 0.5
+	..()
+
+/obj/item/gun/energy/e_gun/nuclear/shoot_live_shot(mob/living/user, pointblank = 0, atom/pbtarget = null, message = 1)
+	failcheck()
+	update_appearance()
+	..()
+
+/obj/item/gun/energy/e_gun/nuclear/proc/failcheck()
+	if(prob(fail_chance) && isliving(loc))
+		var/mob/living/M = loc
+		switch(fail_tick)
+			if(0 to 200)
+				fail_tick += (2*(fail_chance))
+				M.adjustFireLoss(3)
+				to_chat(M, SPAN_USERDANGER("Your [name] feels warmer."))
+			if(201 to INFINITY)
+				SSobj.processing.Remove(src)
+				M.adjustFireLoss(10)
+				reactor_overloaded = TRUE
+				to_chat(M, SPAN_USERDANGER("Your [name]'s reactor overloads!"))
+
+/obj/item/gun/energy/e_gun/nuclear/emp_act(severity)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
+	fail_chance = min(fail_chance + round(15/severity), 100)
+
+/obj/item/gun/energy/e_gun/nuclear/update_overlays()
+	. = ..()
+	if(reactor_overloaded)
+		. += "[icon_state]_fail_3"
+		return
+
+	switch(fail_tick)
+		if(0)
+			. += "[icon_state]_fail_0"
+		if(1 to 150)
+			. += "[icon_state]_fail_1"
+		if(151 to INFINITY)
+			. += "[icon_state]_fail_2"
+
+/obj/item/gun/energy/e_gun/lethal
+	ammo_type = list(/obj/item/ammo_casing/energy/laser, /obj/item/ammo_casing/energy/disabler)

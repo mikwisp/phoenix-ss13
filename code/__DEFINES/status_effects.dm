@@ -138,6 +138,8 @@
 
 #define STATUS_EFFECT_STONED /datum/status_effect/stoned
 
+#define STASIS_NETPOD_EFFECT "stasis_netpod" // stasis state for when a bitrunner is within a netpod
+
 /////////////
 //  SLIME  //
 /////////////

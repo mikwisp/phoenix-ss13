@@ -52,3 +52,9 @@
 	icon_state = "explorer"
 	inhand_icon_state = "explorer"
 	fitted_bodytypes = BODYTYPE_DIGITIGRADE|BODYTYPE_TESHARI
+
+/obj/item/clothing/under/rank/cargo/bitrunner
+	name = "bitrunner's jumpsuit"
+	desc = "It's a leathery jumpsuit worn by a bitrunner. Tacky, but comfortable to wear if sitting for prolonged periods of time."
+	icon_state = "bitrunner"
+	inhand_icon_state = "w_suit"
